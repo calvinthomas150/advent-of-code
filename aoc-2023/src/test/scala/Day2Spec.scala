@@ -124,10 +124,7 @@ class Day2Spec extends AnyFlatSpec with should.Matchers:
       )
     val game = Game(gameId, rounds)
 
-    Day2.maxCubesInGame(game) should be(
-      (Cube(Colour.RED,6),
-       Cube(Colour.GREEN,3),
-        Cube(Colour.BLUE,2)))
+    Day2.maxCubesInGame(game) should be((6,3,2))
 
 
 

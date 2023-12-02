@@ -1,4 +1,4 @@
-import Day2.Colour.{BLUE, GREEN}
+import Day2.Colour.{BLUE, GREEN, RED}
 import Part.*
 
 object Day2:
@@ -17,20 +17,24 @@ object Day2:
 
   def part2(games: List[Game]): Int =
     val maxInGames = games map maxCubesInGame
-    val result = maxInGames.map:
-      case (Cube(_, redCount), Cube(_, greenCount), Cube(_, blueCount)) =>
-      redCount * greenCount * blueCount
-    .sum
+    val result = maxInGames.map(_ * _ * _).sum
 
     Utils.printResult(Part2, result.toString)
     result
 
-  def maxCubesInGame(game: Game):(Cube,Cube,Cube) =
+  def maxCubesInGame(game: Game):(Int,Int,Int) =
     val allCubes = game.rounds.flatMap(r => r.cubes)
-    val maxBlue = allCubes.filter(_.colour == Colour.BLUE).maxBy(_.count)
-    val maxGreen = allCubes.filter(_.colour == Colour.GREEN).maxBy(_.count)
-    val maxRed = allCubes.filter(_.colour == Colour.RED).maxBy(_.count)
-    (maxRed, maxGreen, maxBlue)
+
+    val maxColourMap = allCubes
+      .groupBy(_.colour)
+      .view
+      .mapValues(_.map(_.count).max)
+      .toMap
+
+    ( maxColourMap(RED),
+      maxColourMap(GREEN),
+      maxColourMap(BLUE))
+
 
   def isGameValid(game: Game): Boolean =
     game.rounds.forall(r => isRoundValid(r))

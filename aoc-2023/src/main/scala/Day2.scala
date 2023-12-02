@@ -23,7 +23,7 @@ object Day2:
     result
 
   def maxCubesInGame(game: Game):(Int,Int,Int) =
-    val allCubes = game.rounds.flatMap(r => r.cubes)
+    val allCubes = game.rounds.flatten
 
     val maxColourMap = allCubes
       .groupBy(_.colour)
@@ -40,7 +40,7 @@ object Day2:
     game.rounds.forall(r => isRoundValid(r))
 
   def isRoundValid(round:Round):Boolean =
-    round.cubes.forall(c => isCubeValid(c))
+    round.forall(c => isCubeValid(c))
 
   def isCubeValid(cube: Cube): Boolean =
     val maxCubes: Map[Colour, Int] =
@@ -66,7 +66,7 @@ object Day2:
     roundsInput map createRound
 
   def createRound(roundInput: String): Round =
-    Round(roundInput split "," map createCube)
+    (roundInput split "," map createCube).toList
 
   def createCube(cubeInput: String): Cube =
     val count = cubeInput.trim.takeWhile(_ != ' ').toInt
@@ -80,13 +80,7 @@ object Day2:
       .split(";")
       .toList
 
-  case class Game(id: Int, rounds: List[Round])
-
-  case class Round(cubes: Array[Cube]):
-    override def equals(obj: Any): Boolean = obj match
-      case Round(otherCubes) => cubes.sameElements(otherCubes)
-      case _ => false
-
+  type Round = List[Cube]
 
   case class Cube(colour: Colour, count: Int)
 
@@ -94,4 +88,6 @@ object Day2:
     case BLUE
     case GREEN
     case RED
+
+  case class Game(id: Int, rounds: List[Round])
 

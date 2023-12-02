@@ -1,3 +1,5 @@
+import Part.*
+
 object Day1:
 
   def run(mode:String, dayNumber: Int): Unit =
@@ -10,13 +12,13 @@ object Day1:
     val numbersOnly = removeAllNonNumericCharacters(lines)
     val firstAndLast = firstAndLastNumbers(numbersOnly)
     val result = combineAndSumFirstAndLast(firstAndLast)
-    println(s"Part 1 Result: $result")
+    Utils.printResult(Part1, result.toString)
 
   def part2(lines: Iterator[String]): Unit =
     val numbersOnly = removeAllNonNumericWithWordsCharacters(lines)
     val firstAndLast = firstAndLastNumbers(numbersOnly)
     val result = combineAndSumFirstAndLast(firstAndLast)
-    println(s"Part 2 Result: $result")
+    Utils.printResult(Part2, result.toString)
 
   def removeAllNonNumericCharacters(lines:Iterator[String]):Iterator[String] =
     lines.map(_.replaceAll("[^0-9]", ""))

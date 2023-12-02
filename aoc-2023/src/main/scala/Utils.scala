@@ -11,4 +11,9 @@ object Utils:
       case "live" => Mode.LIVE
       case default => throw MatchError("Expected either test or live")
 
+  def printResult(part: Part, result:String): Unit =
+    part match
+      case Part.Part1 => println(s"Part 1 Result: $result")
+      case Part.Part2 => println(s"Part 2 Result: $result")
+
 

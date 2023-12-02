@@ -24,17 +24,27 @@ object Day1:
     lines.map(_.replaceAll("[^0-9]", ""))
 
   def removeAllNonNumericWithWordsCharacters(lines: Iterator[String]): Iterator[String] =
-      lines
-        .map(_.replaceAll("one", "one1one")
-              .replaceAll("two", "two2two")
-              .replaceAll("three", "three3three")
-              .replaceAll("four", "four4four")
-              .replaceAll("five", "five5five")
-              .replaceAll("six", "six6six")
-              .replaceAll("seven", "seven7seven")
-              .replaceAll("eight", "eight8eight")
-              .replaceAll("nine", "nine9nine")
-              .replaceAll("[^0-9]", ""))
+
+    val numberMap = Map(
+      "one" -> "1",
+      "two" -> "2",
+      "three" -> "3",
+      "four" -> "4",
+      "five" -> "5",
+      "six" -> "6",
+      "seven" -> "7",
+      "eight" -> "8",
+      "nine" -> "9"
+    )
+
+    lines.map:
+      line =>
+        val result = numberMap.foldLeft(line):
+          case (currentStr, (word, number)) =>
+            currentStr.replaceAll(word, number)
+
+        result.replaceAll("[^0-9]", "")
+
 
   def firstAndLastNumbers(numbersOnly: Iterator[String]): Iterator[(Int, Int)] =
     numbersOnly.map(n => (n.head.asDigit,n.last.asDigit))

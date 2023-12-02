@@ -3,11 +3,6 @@ import Part.*
 
 object Day2:
 
-  val maxCubes: Map[Colour, Int] =
-    Map(Colour.RED -> 12,
-        Colour.GREEN -> 13,
-        Colour.BLUE -> 14)
-
   def run(mode:String, dayNumber: Int): Unit =
     val lines = Utils.getInputLines(mode, dayNumber).toList
     val games = setup(lines)
@@ -22,7 +17,11 @@ object Day2:
 
   def part2(games: List[Game]): Int =
     val maxInGames = games map maxCubesInGame
-    val result = maxInGames.map((red, green, blue) => red.count * green.count * blue.count).sum
+    val result =
+      maxInGames
+        .map((red, green, blue) => red.count * green.count * blue.count)
+        .sum
+
     Utils.printResult(Part2, result.toString)
     result
 
@@ -40,6 +39,11 @@ object Day2:
     round.cubes.forall(c => isCubeValid(c))
 
   def isCubeValid(cube: Cube): Boolean =
+    val maxCubes: Map[Colour, Int] =
+      Map(Colour.RED -> 12,
+        Colour.GREEN -> 13,
+        Colour.BLUE -> 14)
+
     maxCubes(cube.colour) >= cube.count
 
   def setup(input: List[String]): List[Game] =
@@ -73,11 +77,13 @@ object Day2:
       .toList
 
   case class Game(id: Int, rounds: List[Round])
+
   case class Round(cubes: Array[Cube]):
     override def equals(obj: Any): Boolean = obj match {
       case Round(otherCubes) => cubes.sameElements(otherCubes)
       case _ => false
     }
+
   case class Cube(colour: Colour, count: Int)
 
   enum Colour:

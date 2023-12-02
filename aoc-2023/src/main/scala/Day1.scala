@@ -1,4 +1,4 @@
-object Day1 {
+object Day1:
 
   def run(mode:String, dayNumber: Int): Unit =
     val linesPart1 = Utils.getInputLines(mode, dayNumber)
@@ -39,4 +39,4 @@ object Day1 {
 
   def combineAndSumFirstAndLast(nums: Iterator[(Int, Int)]): Int =
     nums.map((x, y) => s"$x$y".toInt).sum
-}
+

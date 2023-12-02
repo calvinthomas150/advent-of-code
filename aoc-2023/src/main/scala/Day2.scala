@@ -22,7 +22,6 @@ object Day2:
       redCount * greenCount * blueCount
     .sum
 
-
     Utils.printResult(Part2, result.toString)
     result
 

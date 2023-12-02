@@ -1,6 +1,5 @@
 import Day2.Colour.{BLUE, GREEN}
 import Part.*
-import org.w3c.dom.css.Counter
 
 object Day2:
 

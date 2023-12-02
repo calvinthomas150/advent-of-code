@@ -3,6 +3,12 @@ import Part.*
 
 object Day2:
 
+  case class Game(id: Int, rounds: List[Round])
+  type Round = List[Cube]
+  case class Cube(colour: Colour, count: Int)
+  enum Colour:
+    case BLUE, GREEN, RED
+
   def run(mode:String, dayNumber: Int): Unit =
     val lines = Utils.getInputLines(mode, dayNumber).toList
     val games = setup(lines)
@@ -80,14 +86,6 @@ object Day2:
       .split(";")
       .toList
 
-  type Round = List[Cube]
 
-  case class Cube(colour: Colour, count: Int)
 
-  enum Colour:
-    case BLUE
-    case GREEN
-    case RED
-
-  case class Game(id: Int, rounds: List[Round])
 

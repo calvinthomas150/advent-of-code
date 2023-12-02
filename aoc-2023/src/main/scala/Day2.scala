@@ -17,10 +17,11 @@ object Day2:
 
   def part2(games: List[Game]): Int =
     val maxInGames = games map maxCubesInGame
-    val result =
-      maxInGames
-        .map((red, green, blue) => red.count * green.count * blue.count)
-        .sum
+    val result = maxInGames.map:
+      case (Cube(_, redCount), Cube(_, greenCount), Cube(_, blueCount)) =>
+      redCount * greenCount * blueCount
+    .sum
+
 
     Utils.printResult(Part2, result.toString)
     result
@@ -79,10 +80,10 @@ object Day2:
   case class Game(id: Int, rounds: List[Round])
 
   case class Round(cubes: Array[Cube]):
-    override def equals(obj: Any): Boolean = obj match {
+    override def equals(obj: Any): Boolean = obj match
       case Round(otherCubes) => cubes.sameElements(otherCubes)
       case _ => false
-    }
+
 
   case class Cube(colour: Colour, count: Int)
 

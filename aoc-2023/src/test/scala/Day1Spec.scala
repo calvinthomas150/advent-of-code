@@ -27,4 +27,3 @@ class Day1Spec extends AnyFlatSpec with should.Matchers:
    val removed = Day1.removeAllNonNumericWithWordsCharacters(input).toList
    val expected = List("12","3", "5")
    removed should be(expected)
-

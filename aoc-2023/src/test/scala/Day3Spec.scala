@@ -2,7 +2,7 @@ import Day3.{PartPosition, part1}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
-class Day3Spec  extends AnyFlatSpec with should.Matchers:
+class Day3Spec extends AnyFlatSpec with should.Matchers:
 
   "getSymbolCoordinates" should "return the coordinates (x,y) for the position of symbols in a line" in:
     val line = "...$.*.43.."

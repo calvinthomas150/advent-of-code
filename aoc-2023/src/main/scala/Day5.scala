@@ -1,4 +1,3 @@
-import Day5.getNextItemInChain
 import Part.*
 
 case class MapRange(destinationStart:Long, sourceStart: Long, length: Long)
@@ -12,8 +11,7 @@ object Day5:
     "water-to-light map:",
     "light-to-temperature map:",
     "temperature-to-humidity map:",
-    "humidity-to-location map:"
-  )
+    "humidity-to-location map:")
 
   def run(mode: String, dayNumber: Int): Unit =
     val lines = Utils.getInputLines(mode, dayNumber).toList
@@ -23,13 +21,13 @@ object Day5:
     val seeds = getSeeds(lines)
     val transformations = identifiers.map(getMap(lines, _))
     val locations = transformations.foldLeft(seeds):
-      (currentList, map) => currentList.map(item => getNextItemInChain(item, map))
+      (currentList, map) => currentList.map(item => getNextLinkInChain(item, map))
 
     val result = locations.min
     Utils.printResult(Part1, result.toString)
     result
 
-  def getNextItemInChain(input: Long, map: Seq[MapRange]): Long =
+  def getNextLinkInChain(input: Long, map: Seq[MapRange]): Long =
     map
       .find(s => s.sourceStart <= input && s.sourceStart + s.length >= input)
       .map(s => input - s.sourceStart + s.destinationStart)
@@ -44,13 +42,18 @@ object Day5:
       .toList
 
   def getMap(lines: List[String], identifier: String): Seq[MapRange] =
-    val infoList = lines
+    lines
       .dropWhile(!_.matches(identifier))
       .drop(1)
       .takeWhile(_.nonEmpty)
-      .map(_.split(" "))
-      .map(_.map(_.trim.toLong))
+      .map: line =>
+        val Array(dest, source, length) = line.split(" ").map(_.trim.toLong)
+        MapRange(dest, source, length)
 
-    infoList
-      .map((item: Array[Long]) => MapRange(item.head, item.tail.head, item.last))
+
+  
+
+
+
+
 

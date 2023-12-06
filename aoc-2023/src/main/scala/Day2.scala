@@ -6,8 +6,10 @@ object Day2:
   case class Game(id: Int, rounds: List[Round])
   type Round = List[Cube]
   case class Cube(colour: Colour, count: Int)
-  enum Colour:
-    case BLUE, GREEN, RED
+  enum Colour(val limit:Int):
+    case BLUE extends Colour(12)
+    case GREEN extends Colour(13)
+    case RED extends Colour(14)
 
   def run(mode:String, dayNumber: Int): Unit =
     val lines = Utils.getInputLines(mode, dayNumber).toList
@@ -31,10 +33,11 @@ object Day2:
   def maxCubesInGame(game: Game):(Int,Int,Int) =
     val allCubes = game.rounds.flatten
 
-    val maxColourMap = allCubes
-      .groupBy(_.colour)
-      .view
-      .mapValues(_.map(_.count).max)
+    val maxColourMap =
+      allCubes
+        .groupBy(_.colour)
+        .view
+        .mapValues(_.map(_.count).max)
       .toMap
 
     ( maxColourMap(RED),
@@ -43,18 +46,13 @@ object Day2:
 
 
   def isGameValid(game: Game): Boolean =
-    game.rounds.forall(r => isRoundValid(r))
+    game.rounds forall isRoundValid
 
   def isRoundValid(round:Round):Boolean =
     round.forall(c => isCubeValid(c))
 
   def isCubeValid(cube: Cube): Boolean =
-    val maxCubes: Map[Colour, Int] =
-      Map(Colour.RED -> 12,
-        Colour.GREEN -> 13,
-        Colour.BLUE -> 14)
-
-    maxCubes(cube.colour) >= cube.count
+    cube.count <= cube.colour.limit
 
   def setup(input: List[String]): List[Game] =
     input map createGame

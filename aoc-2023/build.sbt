@@ -7,7 +7,8 @@ lazy val root = (project in file("."))
     name := "aoc-2023"
   )
 
+scalacOptions ++= Seq("-deprecation")
+
 libraryDependencies ++= Seq(
   "org.scalactic" %% "scalactic" % "3.2.17",
-  "org.scalatest" %% "scalatest" % "3.2.17" % "test"
-)
+  "org.scalatest" %% "scalatest" % "3.2.17" % Test)

@@ -1,8 +1,8 @@
 import Part.*
 
-object Day6:
+case class Race(time: Long, record: Long)
 
-  case class Race(time: Long, record: Long)
+object Day6:
 
   def run(mode: String, dayNumber: Int): Unit =
     val lines = Utils.getInputLines(mode, dayNumber).toList
@@ -10,15 +10,16 @@ object Day6:
     part2(lines)
 
   def solution(time: Long, distance: Long): Long =
+
     val(t, d) = (time.toDouble, distance.toDouble)
     val discriminant = Math.sqrt((t * t) - (4 * d))
-    val(rt1, rt2) = ((t / 2) - (discriminant / 2), (t / 2) + (discriminant / 2))
+    val(firstRoot, secondRoot) = ((t - discriminant) / 2, (t + discriminant) / 2)
 
-    val rt1Ceil = rt1.ceil.toLong
-    val rt2Floor = rt2.floor.toLong
+    val firstRootCeiled = firstRoot.ceil.toLong
+    val secondRootFloored = secondRoot.floor.toLong
 
-    val lowerBound = if rt1Ceil == rt1 then rt1Ceil + 1L else rt1Ceil
-    val upperBound = if rt2Floor == rt2 then rt2Floor - 1L else rt2Floor
+    val lowerBound = if firstRootCeiled == firstRoot then firstRootCeiled + 1L else firstRootCeiled
+    val upperBound = if secondRootFloored == secondRoot then secondRootFloored - 1L else secondRootFloored
 
     upperBound - lowerBound + 1L
 
@@ -32,33 +33,24 @@ object Day6:
     result.toInt
 
   def part2(lines:List[String]): Int =
-    val race = getRacesPart2(lines)
+    val race = Race(parseLinePart2(lines.head), parseLinePart2(lines(1)))
     val result = solution(race.time, race.record)
-
     Utils.printResult(Part2, result.toString)
     result.toInt
 
   def getRacesPart1(lines: List[String]): Seq[Race] =
-    val List(t, d) = lines
-    val times = parseLinePart1(t)
-    val distance = parseLinePart1(d)
-    times.zip(distance).map((t,d) => Race(t,d))
-
-  def parseLinePart1(line: String): Seq[Int] =
-    line
-      .dropWhile(!_.isDigit)
-      .split("\\s+")
-      .map(_.toInt)
-      .toList
+    val (times, distances) = (parseLinePart1(lines.head), parseLinePart1(lines.last))
+    times.zip(distances).map((t,d) => Race(t,d))
 
   def getRacesPart2(lines: List[String]): Race =
-    val List(t, d) = lines
-    val time = parseLinePart2(t)
-    val distance = parseLinePart2(d)
-    Race(time, distance)
+    Race(parseLinePart2(lines.head), parseLinePart2(lines.last))
+
+  def parseLinePart1(line: String): Vector[Long] =
+    line match
+      case s"Time: $x" => x.split(" ").filter(_.nonEmpty).map(_.toLong).toVector
+      case s"Distance: $x" => x.split(" ").filter(_.nonEmpty).map(_.toLong).toVector
 
   def parseLinePart2(line:String): Long =
-    line
-      .dropWhile(!_.isDigit)
-      .replaceAll("[^0-9]", "")
-      .toLong
+    line match
+      case s"Time: $x" => x.filterNot(_.isSpaceChar).toLong
+      case s"Distance: $x" => x.filterNot(_.isSpaceChar).toLong

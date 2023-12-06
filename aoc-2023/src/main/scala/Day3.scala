@@ -78,7 +78,7 @@ object Day3:
   def getSymbolCoordinates(lineNumber: Int, line: String, regex: String): Seq[(Int, Int)] =
     val (symbolCoordinates, _) =
       line.foldLeft((Nil:List[Coordinate], 0)):
-        case ((coordinates:List[Coordinate], y:Int) ,char) =>
+        case ((coordinates, y) ,char) =>
           if(char.toString.matches(regex))
             ((lineNumber, y) :: coordinates, y + 1)
           else

@@ -9,36 +9,34 @@ object Day6:
     part1(lines)
     part2(lines)
 
+  def solution(time: Long, distance: Long): Long =
+    val(t, d) = (time.toDouble, distance.toDouble)
+    val discriminant = Math.sqrt((t * t) - (4 * d))
+    val(rt1, rt2) = ((t / 2) - (discriminant / 2), (t / 2) + (discriminant / 2))
+
+    val rt1Ceil = rt1.ceil.toLong
+    val rt2Floor = rt2.floor.toLong
+
+    val lowerBound = if rt1Ceil == rt1 then rt1Ceil + 1L else rt1Ceil
+    val upperBound = if rt2Floor == rt2 then rt2Floor - 1L else rt2Floor
+
+    upperBound - lowerBound + 1L
+
   def part1(lines: List[String]): Int =
     val races = getRacesPart1(lines)
-    val combinations =
-      for(race <- races;
-        time <- BigInt(1) to BigInt(race.time)) yield (race, distanceTravelled(race, time.toLong), race.record)
-
-    val result =
-      combinations
-        .groupBy((race, _,_) => race)
-        .view
-        .mapValues(_.filter((_,distance, record) => distance > record))
-        .mapValues(_.size)
-        .values
-        .product
+    val result = races
+      .map(race => solution(race.time, race.record))
+      .product
 
     Utils.printResult(Part1, result.toString)
-    result
+    result.toInt
 
   def part2(lines:List[String]): Int =
     val race = getRacesPart2(lines)
-    val combinations = for(time <- BigInt(1) to BigInt(race.time))
-      yield (distanceTravelled(race, time.toLong), race.record)
-    val result = combinations.count((distance, record) => distance > record)
+    val result = solution(race.time, race.record)
 
     Utils.printResult(Part2, result.toString)
-    result
-
-
-  def distanceTravelled(race: Race, timeHeld:Long): Long =
-    timeHeld * (race.time - timeHeld)
+    result.toInt
 
   def getRacesPart1(lines: List[String]): Seq[Race] =
     val List(t, d) = lines

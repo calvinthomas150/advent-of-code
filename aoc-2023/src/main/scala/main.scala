@@ -7,6 +7,7 @@ def main(mode: String, dayNumber: Int): Unit =
         2 -> (() => Day2.run(mode, dayNumber)),
         3 -> (() => Day3.run(mode, dayNumber)),
         4 -> (() => Day4.run(mode, dayNumber)),
-        5 -> (() => Day5.run(mode, dayNumber)))
+        5 -> (() => Day5.run(mode, dayNumber)),
+        6 -> (() => Day6.run(mode, dayNumber)))
 
   days(dayNumber)()

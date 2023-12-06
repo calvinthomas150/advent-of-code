@@ -3,27 +3,27 @@ import Part.*
 object Day1:
 
   def run(mode:String, dayNumber: Int): Unit =
-    val linesPart1 = Utils.getInputLines(mode, dayNumber)
-    part1(linesPart1)
-    val linesPart2 = Utils.getInputLines(mode, dayNumber)
-    part2(linesPart2)
+    val lines = Utils.getInputLines(mode, dayNumber).toList
+    part1(lines)
+    part2(lines)
 
-  def part1(lines: Iterator[String]): Unit =
-    val numbersOnly = removeAllNonNumericCharacters(lines)
-    val firstAndLast = firstAndLastNumbers(numbersOnly)
-    val result = combineAndSumFirstAndLast(firstAndLast)
+  def part1(lines: List[String]): Unit =
+    val result = solve(lines, removeAllNonNumericCharacters)
     Utils.printResult(Part1, result.toString)
 
-  def part2(lines: Iterator[String]): Unit =
-    val numbersOnly = removeAllNonNumericWithWordsCharacters(lines)
-    val firstAndLast = firstAndLastNumbers(numbersOnly)
-    val result = combineAndSumFirstAndLast(firstAndLast)
+  def part2(lines: List[String]): Unit =
+    val result = solve(lines, removeAllNonNumericWithWordsCharacters)
     Utils.printResult(Part2, result.toString)
 
-  def removeAllNonNumericCharacters(lines:Iterator[String]):Iterator[String] =
+  def solve(lines: List[String], parse: List[String] => List[String]): Int =
+    val numbersOnly = parse(lines)
+    val firstAndLast = firstAndLastNumbers(numbersOnly)
+    combineAndSumFirstAndLast(firstAndLast)
+
+  def removeAllNonNumericCharacters(lines:List[String]):List[String] =
     lines.map(_.replaceAll("[^0-9]", ""))
 
-  def removeAllNonNumericWithWordsCharacters(lines: Iterator[String]): Iterator[String] =
+  def removeAllNonNumericWithWordsCharacters(lines: List[String]): List[String] =
 
     val numberMap = Map(
       "one" -> "1",
@@ -40,15 +40,13 @@ object Day1:
     lines.map:
       line =>
         val result = numberMap.foldLeft(line):
-          case (currentStr, (word, number)) =>
-            currentStr.replaceAll(word, number)
-
+          case (currentStr, (word, number)) => currentStr.replaceAll(word, number)
         result.replaceAll("[^0-9]", "")
 
-
-  def firstAndLastNumbers(numbersOnly: Iterator[String]): Iterator[(Int, Int)] =
+  def firstAndLastNumbers(numbersOnly: List[String]): List[(Int, Int)] =
     numbersOnly.map(n => (n.head.asDigit,n.last.asDigit))
 
-  def combineAndSumFirstAndLast(nums: Iterator[(Int, Int)]): Int =
+  def combineAndSumFirstAndLast(nums: List[(Int, Int)]): Int =
+    println(nums)
     nums.map((x, y) => s"$x$y".toInt).sum
 

@@ -14,11 +14,11 @@ object Day3:
   def part1(lines:List[String]): Int =
     val maxX = lines.length - 1
     val maxY = lines.head.length - 1
-    val maxCoordinate: Coordinate = (maxX, maxY)
+    implicit val maxCoordinate: Coordinate = (maxX, maxY)
     val linesWithNumber = lines zip (0 to maxX)
 
     val symbols = for((line, lineNumber) <- linesWithNumber) yield getSymbolCoordinates(lineNumber, line, "[^0-9.]")
-    val partCoordinates = getAllParts(lines, symbols.flatten, maxCoordinate)
+    val partCoordinates = getAllParts(lines, symbols.flatten)
     val result = partCoordinates.map(getNumberFromPartPosition(lines, _)).sum
 
     Utils.printResult(Part1, result.toString)
@@ -27,13 +27,13 @@ object Day3:
   def part2(lines: List[String]): Long =
     val maxX = lines.length - 1
     val maxY = lines.head.length - 1
-    val maxCoordinate: Coordinate = (maxX, maxY)
+    implicit val maxCoordinate: Coordinate = (maxX, maxY)
     val linesWithNumber = lines zip (0 to maxX)
 
     val symbols = for((line, lineNumber) <- linesWithNumber) yield getSymbolCoordinates(lineNumber, line, "\\*")
-    val partCoordinates = getAllParts(lines, symbols.flatten, maxCoordinate)
+    val partCoordinates = getAllParts(lines, symbols.flatten)
 
-    val gears = findGears(symbols.flatten, partCoordinates, maxCoordinate)
+    val gears = findGears(symbols.flatten, partCoordinates)
 
     val result =
       gears
@@ -46,11 +46,11 @@ object Day3:
     Utils.printResult(Part2, result.toString)
     result
 
-  def findGears(symbols: Seq[(Int, Int)], parts: List[Day3.PartPosition],maxCoordinate: Coordinate): Map[Coordinate, Seq[PartPosition]] =
+  def findGears(symbols: Seq[(Int, Int)], parts: List[Day3.PartPosition])(implicit maxCoordinate: Coordinate): Map[Coordinate, Seq[PartPosition]] =
 
     val symbolsAndParts =
       for( symbol <- symbols;
-         part <- parts if isPartAdjacentToSymbol(symbol, part, maxCoordinate)) yield (symbol, part)
+         part <- parts if isPartAdjacentToSymbol(symbol, part)) yield (symbol, part)
 
     val gears =
       symbolsAndParts
@@ -62,7 +62,7 @@ object Day3:
       
     gears
 
-  def isPartAdjacentToSymbol(symbol: Coordinate, partPosition: PartPosition, maxCoordinate: Coordinate):Boolean =
+  def isPartAdjacentToSymbol(symbol: Coordinate, partPosition: PartPosition)(implicit maxCoordinate: Coordinate):Boolean =
 
     val (maxX, maxY) = maxCoordinate
     val (symbolX, symbolY) = symbol
@@ -86,11 +86,11 @@ object Day3:
 
     symbolCoordinates.reverse
 
-  def getAllParts(lines:List[String], symbols: List[Coordinate], maxCoordinate: Coordinate):List[PartPosition] =
-    val parts = for(symbol <- symbols) yield getPartsFromSymbol(symbol, lines, maxCoordinate)
+  def getAllParts(lines:List[String], symbols: List[Coordinate])(implicit maxCoordinate: Coordinate):List[PartPosition] =
+    val parts = for(symbol <- symbols) yield getPartsFromSymbol(symbol, lines)
     parts.flatten
 
-  def getPartsFromSymbol(symbol: Coordinate, lines:List[String], maxCoordinate: Coordinate): Set[PartPosition] =
+  def getPartsFromSymbol(symbol: Coordinate, lines:List[String])(implicit maxCoordinate: Coordinate): Set[PartPosition] =
     val (symbolX, symbolY) = symbol
     val (maxX, maxY) = maxCoordinate
     val xRange = Math.max(0, symbolX - 1) to Math.min(symbolX + 1, maxX)
@@ -98,11 +98,11 @@ object Day3:
 
     val partsWithDuplicates = for(x <- xRange;
         y <- yRange if lines(x)(y).toString.matches(numericRegex)
-    ) yield getPart(lines(x), (x,y), maxCoordinate)
+    ) yield getPart(lines(x), (x,y))
 
     partsWithDuplicates.toSet
 
-  def getPart(line: String, partOfNumber: Coordinate, maxCoordinate: Coordinate): PartPosition =
+  def getPart(line: String, partOfNumber: Coordinate)(implicit maxCoordinate: Coordinate): PartPosition =
     val (_, maxY) = maxCoordinate
     val (numberX, numberY) = partOfNumber
     val numberToStart = numberY to 0 by -1

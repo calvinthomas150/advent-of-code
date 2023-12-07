@@ -29,6 +29,7 @@ object Day7:
 
     val tiesBroken = handRankBets
       .groupBy(_.rank)
+      .view
       .mapValues(tieBreakOrder(_, cardValueMap))
 
     val sortedList = tiesBroken.toList.sortBy(_._1.order).flatMap(_._2)

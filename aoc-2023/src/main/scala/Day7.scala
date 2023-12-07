@@ -42,7 +42,7 @@ object Day7:
     val cardValueMap: Map[Char, Int] =
       List('2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A').zip(2 to 14).toMap
 
-    solve(lines, cardValueMap, false, Part.Part2)
+    solve(lines, cardValueMap, false, Part.Part1)
 
 
   def part2(lines: List[String]): Long =

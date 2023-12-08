@@ -41,7 +41,6 @@ object Day8:
     Utils.printResult(Part1, result.toString)
     result
 
-
   def part2(lines: List[String]): Long =
     val (directions, nodeMap) = parse(lines)
     val startingNodes: List[Node] = nodeMap.keys.filter(_.endsWith("A")).toList
@@ -74,7 +73,3 @@ object Day8:
 
   def parseDirections(lines:String): List[Direction] =
     lines.map(Direction.from).toList
-
-
-
-

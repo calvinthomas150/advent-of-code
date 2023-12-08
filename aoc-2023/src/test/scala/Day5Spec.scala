@@ -1,4 +1,5 @@
 import Day4.{Scratchcard, part1}
+import Day5.MapRange
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 

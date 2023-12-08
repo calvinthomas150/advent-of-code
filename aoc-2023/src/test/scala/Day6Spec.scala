@@ -1,3 +1,4 @@
+import Day6.Race
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 

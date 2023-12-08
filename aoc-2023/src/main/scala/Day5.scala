@@ -1,8 +1,8 @@
 import Part.*
 
-case class MapRange(destinationStart:Long, sourceStart: Long, length: Long)
-
 object Day5:
+
+  case class MapRange(destinationStart:Long, sourceStart: Long, length: Long)
 
   val identifiers: Seq[String] = List(
     "seed-to-soil map:",

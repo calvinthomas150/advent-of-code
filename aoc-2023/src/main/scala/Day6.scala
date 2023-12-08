@@ -1,8 +1,8 @@
 import Part.*
 
-case class Race(time: Long, record: Long)
-
 object Day6:
+
+  case class Race(time: Long, record: Long)
 
   def run(mode: String, dayNumber: Int): Unit =
     val lines = Utils.getInputLines(mode, dayNumber).toList

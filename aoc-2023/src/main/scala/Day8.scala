@@ -1,4 +1,4 @@
-import Part.Part1
+import Part.{Part1, Part2}
 
 import scala.annotation.tailrec
 
@@ -22,26 +22,43 @@ object Day8:
     part1(lines)
     part2(lines)
 
+  def countSteps(directions: List[Direction], node: Node, nodeMap: NodeMap, endState: Node => Boolean): Int =
+    @tailrec
+    def count(dirs: List[Direction], node: Node, steps: Int): Int =
+      if (endState(node)) steps
+      else
+        val nextNode = getNextNode(dirs.head, node, nodeMap)
+        if (dirs.size == 1) count(directions, nextNode, steps + 1)
+        else count(dirs.tail, nextNode, steps + 1)
+
+    count(directions, node, 0)
 
   def part1(lines: List[String]): Int =
     val (directions, nodeMap) = parse(lines)
     val startNode = "AAA"
+    val result = countSteps(directions, startNode, nodeMap ,_ == "ZZZ")
 
-    @tailrec
-    def countSteps(dirs: List[Direction], node: Node, steps: Int): Int =
-      if(node == "ZZZ") steps
-      else
-        val nextNode = getNextNode(dirs.head, node, nodeMap)
-        if(dirs.size == 1) countSteps(directions, nextNode, steps + 1)
-        else countSteps(dirs.tail, nextNode, steps + 1)
-
-    val result = countSteps(directions, startNode, 0)
     Utils.printResult(Part1, result.toString)
     result
 
 
-  def part2(lines: List[String]): Int =
-    ???
+  def part2(lines: List[String]): Long =
+    val (directions, nodeMap) = parse(lines)
+    val startingNodes: List[Node] = nodeMap.keys.filter(_.endsWith("A")).toList
+
+    def lcm(a: Long, b: Long) =
+      a * b / gcd(a, b)
+
+    @tailrec
+    def gcd(a: Long, b: Long): Long =
+      if b == 0 then a else gcd(b, a % b)
+
+    val result = startingNodes.map(node =>
+        countSteps(directions, node, nodeMap, _.endsWith("Z")).toLong)
+      .reduce(lcm)
+
+    Utils.printResult(Part2, result.toString)
+    result
 
   def getNextNode(direction: Direction, currentNode:Node, nodeMap: NodeMap): Node =
     direction match

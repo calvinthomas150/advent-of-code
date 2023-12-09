@@ -25,3 +25,7 @@ class Day5Spec extends AnyFlatSpec with should.Matchers:
   "part1" should "return the correct value" in:
     val lines = Utils.getInputLines("test", 5).toList
     Day5.part1(lines) should be(35)
+
+  "part2" should "return the correct value" in :
+    val lines = Utils.getInputLines("test", 5).toList
+    Day5.part2(lines) should be(46)

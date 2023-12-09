@@ -23,7 +23,7 @@ object Day9:
     val result =
       (histories map:
         history =>
-          val diffsWithHistory: Vector[Differences] = (allDifferences(history) :+ history)
+          val diffsWithHistory: Vector[Differences] = allDifferences(history) :+ history
           updateAllDifferences(diffsWithHistory)(BACK).last.last).sum
 
     Utils.printResult(Part1, result.toString)
@@ -33,7 +33,7 @@ object Day9:
     val histories = parse(lines)
     val result = (histories map :
       history =>
-        val diffsWithHistory: Vector[Differences] = (allDifferences(history) :+ history)
+        val diffsWithHistory: Vector[Differences] = allDifferences(history) :+ history
         updateAllDifferences(diffsWithHistory)(FRONT).last.head).sum
 
     Utils.printResult(Part2, result.toString)

@@ -47,6 +47,5 @@ object Day1:
     numbersOnly.map(n => (n.head.asDigit,n.last.asDigit))
 
   def combineAndSumFirstAndLast(nums: List[(Int, Int)]): Int =
-    println(nums)
     nums.map((x, y) => s"$x$y".toInt).sum
 

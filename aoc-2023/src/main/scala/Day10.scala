@@ -42,21 +42,16 @@ object Day10:
 
   def getNeighbourCoordinates(grid: Grid, coordinate: Coordinate): Vector[Coordinate] =
     val (x, y) = coordinate
+    val potentialCoordinates = List((x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1))
 
-    val up = (x - 1, y)
-    val down = (x + 1, y)
-    val left = (x, y - 1)
-    val right = (x, y + 1)
+    potentialCoordinates.filter:
+      case (x, y) =>
+        x >= 0 &&
+        y >= 0 &&
+        x <= grid.items.size - 1 &&
+        y <= grid.items.head.size -1
+    .toVector
 
-    val coordinates =
-      Vector(up, down, left, right)
-        .filter((x, y) =>
-          x >= 0
-          && grid.items.size - 1 >= x
-          && y >= 0
-          && grid.items.head.size -1 >= y)
-
-    coordinates
 
   def run(mode: String, dayNumber: Int): Unit =
     val lines = Utils.getInputLines(mode, dayNumber).toList
@@ -66,13 +61,14 @@ object Day10:
   def part1(lines: List[String]): Int =
     val grid = parse(lines)
     val start = findStartPosition(grid)
-    val stack = List((start, 0))
+    val stack = List((start, 1))
     val visited = Set.empty[Coordinate]
 
     @tailrec
     def search(toVisit: List[(Coordinate, Int)], visited: Set[Coordinate], max: Int): Int =
       toVisit match
-        case Nil => max / 2 + 1
+        case Nil =>
+          Math.ceil(max / 2.0).toInt
         case (coordinate, steps) :: remaining =>
           val newMax = math.max(max, steps)
           val neighbours = getNeighbourCoordinates(grid, coordinate)
@@ -89,7 +85,7 @@ object Day10:
           val newVisited = visited ++ validNeighbours
           search(newToVisit.toList, newVisited, newMax)
 
-    val result = search(stack, visited, 0)
+    val result = search(stack, visited, 1)
     Utils.printResult(Part1, result.toString)
     result
 

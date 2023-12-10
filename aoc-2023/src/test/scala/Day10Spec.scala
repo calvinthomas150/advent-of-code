@@ -27,11 +27,11 @@ class Day10Spec extends AnyFlatSpec with should.Matchers:
     val grid = Day10.parse(lines)
     Day10.findStartPosition(grid) should be(2, 0)
   
-  "findConnectingPipeCoodinates" should "return the pipe coordinates that connect to the given coordinate" in:
+  "getNeighbourCoordinates" should "return the pipe coordinates that connect to the given coordinate" in:
     val lines = Source.fromResource(s"test-puzzle-input/day10simple.txt").getLines.toList
     val grid = Day10.parse(lines)
     val startCoordinate = Day10.findStartPosition(grid)
     Day10.getNeighbourCoordinates(grid, startCoordinate) should be(Vector((0, 1), (2, 1), (1, 0), (1, 2)))
     
-  "part1" should "return the coorect value" in:
+  "part1" should "return the correct value" in:
     Day10.part1(lines) should be(8)

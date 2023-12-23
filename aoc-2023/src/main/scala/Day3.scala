@@ -14,7 +14,7 @@ object Day3:
   def part1(lines:List[String]): Int =
     val maxX = lines.length - 1
     val maxY = lines.head.length - 1
-    implicit val maxCoordinate: Coordinate = (maxX, maxY)
+    given maxCoordinate: Coordinate = (maxX, maxY)
     val linesWithNumber = lines zip (0 to maxX)
 
     val symbols = for((line, lineNumber) <- linesWithNumber) yield getSymbolCoordinates(lineNumber, line, "[^0-9.]")
@@ -27,7 +27,7 @@ object Day3:
   def part2(lines: List[String]): Long =
     val maxX = lines.length - 1
     val maxY = lines.head.length - 1
-    implicit val maxCoordinate: Coordinate = (maxX, maxY)
+    given maxCoordinate: Coordinate = (maxX, maxY)
     val linesWithNumber = lines zip (0 to maxX)
 
     val symbols = for((line, lineNumber) <- linesWithNumber) yield getSymbolCoordinates(lineNumber, line, "\\*")
@@ -46,7 +46,7 @@ object Day3:
     Utils.printResult(Part2, result.toString)
     result
 
-  def findGears(symbols: Seq[(Int, Int)], parts: List[Day3.PartPosition])(implicit maxCoordinate: Coordinate): Map[Coordinate, Seq[PartPosition]] =
+  def findGears(symbols: Seq[(Int, Int)], parts: List[Day3.PartPosition])(using maxCoordinate: Coordinate): Map[Coordinate, Seq[PartPosition]] =
 
     val symbolsAndParts =
       for( symbol <- symbols;
@@ -62,7 +62,7 @@ object Day3:
       
     gears
 
-  def isPartAdjacentToSymbol(symbol: Coordinate, partPosition: PartPosition)(implicit maxCoordinate: Coordinate):Boolean =
+  def isPartAdjacentToSymbol(symbol: Coordinate, partPosition: PartPosition)(using maxCoordinate: Coordinate):Boolean =
 
     val (maxX, maxY) = maxCoordinate
     val (symbolX, symbolY) = symbol
@@ -86,11 +86,11 @@ object Day3:
 
     symbolCoordinates.reverse
 
-  def getAllParts(lines:List[String], symbols: List[Coordinate])(implicit maxCoordinate: Coordinate):List[PartPosition] =
+  def getAllParts(lines:List[String], symbols: List[Coordinate])(using maxCoordinate: Coordinate):List[PartPosition] =
     val parts = for(symbol <- symbols) yield getPartsFromSymbol(symbol, lines)
     parts.flatten
 
-  def getPartsFromSymbol(symbol: Coordinate, lines:List[String])(implicit maxCoordinate: Coordinate): Set[PartPosition] =
+  def getPartsFromSymbol(symbol: Coordinate, lines:List[String])(using maxCoordinate: Coordinate): Set[PartPosition] =
     val (symbolX, symbolY) = symbol
     val (maxX, maxY) = maxCoordinate
     val xRange = Math.max(0, symbolX - 1) to Math.min(symbolX + 1, maxX)

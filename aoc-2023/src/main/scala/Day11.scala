@@ -56,7 +56,7 @@ object Day11:
     val expandedSecond = (expandedX2, expandedY2)
     (expandedFirst, expandedSecond)
 
-  def manhattanDistance(first: Coordinate, second: Coordinate) =
+  def manhattanDistance(first: Coordinate, second: Coordinate): Long =
     (first._1 - second._1).abs + (first._2 - second._2).abs
 
   def getExpansionRows(universe: Universe): List[Int] =

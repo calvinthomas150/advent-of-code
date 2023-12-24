@@ -58,6 +58,6 @@ object Day12:
         .map(s => s"${s._1} ${s._2}")
 
     val result = updatedLines.map(countLine).sum
-    Utils.printResult(Part1, result.toString)
+    Utils.printResult(Part2, result.toString)
     result
 

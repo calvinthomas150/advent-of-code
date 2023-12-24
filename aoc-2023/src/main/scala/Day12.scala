@@ -1,60 +1,64 @@
 import Part.*
 
+import scala.collection.mutable
+
 object Day12:
 
   type Springs = List[Char]
-  type DamagedGroups = Array[Int]
+  type DamagedCounts = List[Int]
 
   def run(mode: String, dayNumber: Int): Unit =
     val lines = Utils.getInputLines(mode, dayNumber).toList
     part1(lines)
     part2(lines)
 
-  def part1(lines: List[String]): Long =
-    val parsed = parse(lines)
-    val combinations: Seq[(Seq[Springs], DamagedGroups)] = 
-      parsed.map((springs, damagedGroups) => (createPossibleSpringCombinations(springs), damagedGroups))
-      
-    val groups = 
-      combinations
-        .map((springList, damaged) => 
-          (springList.map(countGroups)
-            .map(_.filter(_ != 0)),damaged.toList)
-        )
-      
-    val result = 
-      groups.map(
-        (springs, groups) => springs.filter(_ == groups))
-        .map(_.size)
-        .sum
+  def countLine(line: String): Long =
+    val Array(s, dc) = line.split(" ")
+    val springs: Springs = s.toList
+    val damagedCounts: DamagedCounts = dc.split(",").map(_.toInt).toList
+    count(springs, damagedCounts)
 
+  val cache = mutable.Map.empty[(Springs, DamagedCounts, Int), Long]
+
+  def count(springs: Springs, damagedCounts: DamagedCounts, damagedCount: Int = 0): Long =
+    cache.getOrElseUpdate((springs, damagedCounts, damagedCount), countCombinations(springs, damagedCounts, damagedCount))
+
+  def countCombinations(springs: Springs, damagedCounts: DamagedCounts, damagedCount: Int = 0): Long =
+    if(springs.isEmpty)
+      if(damagedCounts.isEmpty && damagedCount == 0) 1L
+      else if(damagedCounts.length == 1 && damagedCounts.head == damagedCount) 1L
+      else 0L
+    else
+      def working() =
+        if(damagedCount == 0) count(springs.tail, damagedCounts)
+        else if(damagedCounts.nonEmpty && damagedCounts.head == damagedCount) count(springs.tail, damagedCounts.tail)
+        else 0L
+      def damaged() =
+        if(damagedCounts.isEmpty) 0L
+        else if damagedCounts.head == damagedCount then 0L
+        else count(springs.tail, damagedCounts, damagedCount + 1)
+      springs.head match
+        case '?' => working() + damaged()
+        case '.' => working()
+        case '#' => damaged()
+
+  def part1(lines: List[String]): Long =
+    val result = lines.map(countLine).sum
     Utils.printResult(Part1, result.toString)
     result
 
   def part2(lines: List[String]): Long =
-    ???
-  
-  def countGroups(springs: Springs): List[Int] =
-    springs.foldLeft(List.empty[Int])((acc, char) =>
-      acc match
-        case Nil => if(char == '#') List(1) else List(0)
-        case head :: tail =>
-          if(char == '#') (head + 1) :: tail
-          else
-            0 :: acc).reverse
+    val springs = for(line <- lines) yield (line.takeWhile(_ != ' ') + '?') * 4 ++ line.takeWhile(_ != ' ')
+    val damagedCounts =
+      for(line <- lines)
+        yield ((line.dropWhile(_ != ' ').drop(1) + ',') * 4) ++ line.dropWhile(_ != ' ').drop(1)
 
-  def createPossibleSpringCombinations(springs: Springs): Seq[Springs] =
-    springs.foldRight(List(List.empty[Char])): (char, acc) =>
-      char match
-        case '?' =>
-          for(
-            springs <- acc;
-            char <- List('.', '#')) yield char :: springs
-        case _ =>
-          acc.map(springs => char :: springs)
+    val updatedLines =
+      springs
+        .zip(damagedCounts)
+        .map(s => s"${s._1} ${s._2}")
 
-  def parse(lines: List[String]): List[(Springs, DamagedGroups)] =
-    lines
-      .map(_.split(" "))
-      .map:
-        case Array(x, y) => (x.toList, y.split(",").map(_.toInt))
+    val result = updatedLines.map(countLine).sum
+    Utils.printResult(Part1, result.toString)
+    result
+

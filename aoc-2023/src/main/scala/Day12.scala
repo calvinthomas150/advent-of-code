@@ -1,10 +1,8 @@
 import Part.*
 
-import scala.annotation.tailrec
-
 object Day12:
 
-  type Springa = List[Char]
+  type Springs = List[Char]
   type DamagedGroups = Array[Int]
 
   def run(mode: String, dayNumber: Int): Unit =
@@ -14,7 +12,7 @@ object Day12:
 
   def part1(lines: List[String]): Long =
     val parsed = parse(lines)
-    val combinations: Seq[(Seq[Springa], DamagedGroups)] = 
+    val combinations: Seq[(Seq[Springs], DamagedGroups)] = 
       parsed.map((springs, damagedGroups) => (createPossibleSpringCombinations(springs), damagedGroups))
       
     val groups = 
@@ -36,7 +34,7 @@ object Day12:
   def part2(lines: List[String]): Long =
     ???
   
-  def countGroups(springs: Springa): List[Int] =
+  def countGroups(springs: Springs): List[Int] =
     springs.foldLeft(List.empty[Int])((acc, char) =>
       acc match
         case Nil => if(char == '#') List(1) else List(0)
@@ -45,7 +43,7 @@ object Day12:
           else
             0 :: acc).reverse
 
-  def createPossibleSpringCombinations(springs: Springa): Seq[Springa] =
+  def createPossibleSpringCombinations(springs: Springs): Seq[Springs] =
     springs.foldRight(List(List.empty[Char])): (char, acc) =>
       char match
         case '?' =>
@@ -53,9 +51,9 @@ object Day12:
             springs <- acc;
             char <- List('.', '#')) yield char :: springs
         case _ =>
-          acc.map(comb => char :: comb)
+          acc.map(springs => char :: springs)
 
-  def parse(lines: List[String]): List[(Springa, DamagedGroups)] =
+  def parse(lines: List[String]): List[(Springs, DamagedGroups)] =
     lines
       .map(_.split(" "))
       .map:

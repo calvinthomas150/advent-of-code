@@ -35,7 +35,6 @@ object Day12:
         else 0L
       def damaged() =
         if(damagedCounts.isEmpty) 0L
-        else if damagedCounts.head == damagedCount then 0L
         else count(springs.tail, damagedCounts, damagedCount + 1)
       springs.head match
         case '?' => working() + damaged()

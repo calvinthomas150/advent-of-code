@@ -5,7 +5,7 @@ object Utils:
     val runningMode = getMode(mode)
     Source.fromResource(s"${runningMode.filePath}/day$dayNumber.txt").getLines
 
-  private def getMode(mode:String): Mode =
+  def getMode(mode:String): Mode =
     mode match
       case "test" => Mode.TEST
       case "live" => Mode.LIVE
